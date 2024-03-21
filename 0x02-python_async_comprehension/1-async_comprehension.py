@@ -6,7 +6,7 @@ import random
 async_generator = __import__('0-async_generator').async_generator
 
 
-async def async_comprehension() -> list[float]:
+async def async_comprehension() -> list[float, None, None]:
     """
     async_comprehension- function to return 10 random numbers
     Arguments:
