@@ -37,3 +37,19 @@ class TestAccessNestedMap(unittest.TestCase):
         """
         result = access_nested_map(nested_map, path)
         self.assertEqual(result, expected_output)
+
+    @parameterized.expand([
+        ({}, ("a",)),
+        ({"a": 1}, ("a", "b")),
+        ({"a": {"b": 2}}, ("a", "b", "c")),
+        ])
+    def test_access_nested_map_exception(self, nested_map, path):
+        """
+        Test the access_nested_map function with invalid inputs.
+
+        Args:
+        - nested_map (dict): The nested dictionary to access.
+        - path (tuple): The path to the desired value.
+        """
+        with self.assertRaises(KeyError):
+            access_nested_map(nested_map, path)
