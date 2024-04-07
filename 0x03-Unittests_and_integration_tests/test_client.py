@@ -59,22 +59,22 @@ class TestGithubOrgClient(unittest.TestCase):
                              _public_repos_url.return_value)
             mock_get.assert_called_once()
 
-        @patch('client.get_json', return_value=[{'name': 'Holberton'},
-                                                {'name': '89'},
-                                                {'name': 'alx'}])
-        def test_public_repos(self, mock_repo):
-            """
-            Test GithubOrgClient's public_repos method
-            """
-            with patch.object(GithubOrgClient,
-                              '_public_repos_url',
-                              new_callable=PropertyMock,
-                              return_value="https://api.github.com/") as m:
+            @patch('client.get_json', return_value=[{"name": "Alx"}])
+            def test_public_repos(self, mock_get_json):
+                """
+                Test the public_repos method of GithubOrgClient class.
+                Args:
+                mock_get_json (MagicMock): Mock object for get_json function.
+                """
+                with patch.object(GithubOrgClient, '_public_repos_url',
+                                  new_callable=PropertyMock) \
+                        as mock_public_repos_url:
+                    mock_public_repos_url.return_value = \
+                        "https://api.github.com/orgs/test_org/repos"
 
-                test_client = GithubOrgClient('holberton')
-                test_repo = test_client.public_repos()
-                for idx in range(3):
-                    self.assertIn(mock_repo.return_value[idx]
-                                  ['name'], test_repo)
-                mock_repo.assert_called_once()
-                m.assert_called_once()
+                    test = GithubOrgClient("test_org")
+                    test_public_repos = test.public_repos
+                    for repo in test_public_repos:
+                        self.assertEqual(repo, {"name": "Alx"})
+                    mock_public_repos_url.assert_called_once()
+                    mock_get_json.assert_called_once()
