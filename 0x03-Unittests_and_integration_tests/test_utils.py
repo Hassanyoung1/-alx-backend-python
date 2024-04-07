@@ -9,7 +9,7 @@ to test the access_nested_map function with various input cases.
 
 import unittest
 from parameterized import parameterized
-from utils import access_nested_map, get_json, requests
+from utils import access_nested_map, get_json, requests, memoize
 from unittest.mock import patch, Mock
 
 
@@ -76,3 +76,27 @@ class TestGetJson(unittest.TestCase):
 
         mock_get.assert_called_once_with(test_url)
         self.assertEqual(result, expected_payload)
+
+
+class TestMemoize(unittest.TestCase):
+    """
+    Test cases for the memoize decorator.
+
+    This class contains test cases to validate the behavior
+    of the memoize decorator when applied to a class method.
+    """
+    def test_memoize(self):
+        """
+        Test that the memoize decorator caches the result of a method.
+        """
+        class TestClass:
+            def a_method(self):
+                return 42
+
+            @memoize
+            def a_memoized_method(self):
+                return self.a_method()
+        with patch.object(TestClass, 'a_method') as mock_a_method:
+            test_instance = TestClass()
+            test_instance.a_memoized_method()
+            mock_a_method.assert_called_once()
