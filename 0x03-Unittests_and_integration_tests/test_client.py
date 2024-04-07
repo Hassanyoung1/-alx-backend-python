@@ -69,5 +69,6 @@ class TestGithubOrgClient(unittest.TestCase):
                 mock_get_json (MagicMock): Mock object for get_json function.
                 """
                 test = GithubOrgClient("test")
-                self.assertEqual(test.public_repos(), ["Alx", "Holberton", "School"])
+                self.assertEqual(test.public_repos(), ["Alx", "Holberton",
+                                                       "School"])
                 mock_get_json.assert_called_once()
