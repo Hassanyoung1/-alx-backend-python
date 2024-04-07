@@ -9,10 +9,11 @@ class in the client module.
 
 import unittest
 from unittest.mock import patch
-from parameterized import parameterized
+from parameterized import parameterized, parameterized_class
 import client
 from client import GithubOrgClient
 from utils import memoize
+from fixtures import TEST_PAYLOAD
 
 
 class TestGithubOrgClient(unittest.TestCase):
@@ -94,3 +95,34 @@ class TestGithubOrgClient(unittest.TestCase):
                 test = GithubOrgClient("test_org")
                 result = test.has_license(repo, license_key)
                 self.assertEqual(result, expected)
+
+
+@parameterized_class(
+    ('org_payload', 'repos_payload', 'expected_repos', 'apache2_repos'),
+    [(TEST_PAYLOAD[0][0], TEST_PAYLOAD[0][1], TEST_PAYLOAD[0][2],
+      TEST_PAYLOAD[0][3])]
+)
+class TestIntegrationGithubOrgClient(unittest.TestCase):
+    """
+    Integration test for the GithubOrgClient.public_repos method
+    """
+
+    @classmethod
+    def setUpClass(self):
+        """
+        Set up function for TestIntegrationGithubOrgClient class.
+        Sets up the patcher for the get_json function.
+        """
+        self.patcher = patch('client.get_json')
+        self.mock_get_json = self.patcher.start()
+        self.mock_get_json.side_effect = [
+            self.org_payload, self.repos_payload
+        ]
+
+    @classmethod
+    def tearDownClass(self):
+        """
+        Tear down function for TestIntegrationGithubOrgClient class.
+        Stops the patcher for the get_json function.
+        """
+        self.patcher.stop()
