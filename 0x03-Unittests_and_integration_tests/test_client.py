@@ -12,7 +12,7 @@ from unittest.mock import patch
 from parameterized import parameterized
 import client
 from client import GithubOrgClient
-
+from utils import memoize
 
 class TestGithubOrgClient(unittest.TestCase):
     """
@@ -36,3 +36,22 @@ class TestGithubOrgClient(unittest.TestCase):
         result = test.org
         self.assertEqual(result, mock_get.return_value)
         mock_get.assert_called_once()
+
+    def test_public_repos_url(self):
+        """
+        Test the _public_repos_url method of GithubOrgClient class.
+        """
+
+        @patch('client.get_json', return_value={"payload": True})
+        @memoize
+        def test_public_repos_url(self, _public_repos_url):
+            """
+            Test the _public_repos_url method of GithubOrgClient class.
+
+            Args:
+                _public_repos_url (MagicMock): Mock object for get_json function.
+         """
+            test = GithubOrgClient("_public_repos_url")
+            test_public_repos_url = test._public_repos_url
+            self.assertEqual(test_public_repos_url, _public_repos_url.return_value)
+            mock_get.assert_called_once()
