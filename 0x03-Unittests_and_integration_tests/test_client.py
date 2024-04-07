@@ -74,8 +74,7 @@ class TestGithubOrgClient(unittest.TestCase):
 
                     test = GithubOrgClient("test_org")
                     test_public_repos = test.public_repos
-
-                    self.assertEqual(test_public_repos,
-                                     mock_get_json.return_value)
+                    for repo in test_public_repos:
+                        self.assertEqual(repo, {"name": "Alx"})
                     mock_get_json.assert_called_once()
                     mock_public_repos_url.assert_called_once()
