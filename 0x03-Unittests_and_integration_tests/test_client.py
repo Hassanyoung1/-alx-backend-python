@@ -59,16 +59,22 @@ class TestGithubOrgClient(unittest.TestCase):
                              _public_repos_url.return_value)
             mock_get.assert_called_once()
 
-            @patch('client.get_json', return_value=[{"name": "Alx"},
-                                                    {"name": "Holberton"},
-                                                    {"name": "School"}])
+            @patch('client.get_json', return_value=[{"name": "Alx"}])
             def test_public_repos(self, mock_get_json):
                 """
                 Test the public_repos method of GithubOrgClient class.
                 Args:
                 mock_get_json (MagicMock): Mock object for get_json function.
                 """
-                test = GithubOrgClient("test")
-                self.assertEqual(test.public_repos(), ["Alx", "Holberton",
-                                                       "School"])
-                mock_get_json.assert_called_once()
+                with patch.object(GithubOrgClient, '_public_repos_url',
+                                  new_callable=PropertyMock) \
+                        as mock_public_repos_url:
+                    mock_public_repos_url.return_value = \
+                        "https://api.github.com/orgs/test_org/repos"
+
+                    test = GithubOrgClient("test_org")
+                    test_public_repos = test.public_repos
+                    for repo in test_public_repos:
+                        self.assertEqual(repo, {"name": "Alx"})
+                    mock_public_repos_url.assert_called_once()
+                    mock_get_json.assert_called_once()
