@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Test module for the client module.
+Test module for the client.
 
 This module contains unit tests for the GithubOrgClient
 class in the client module.
